@@ -1,5 +1,7 @@
+#!/usr/bin/env bash
+
 cd $(dirname $0)/../
-source ../settings.conf
+source settings.conf
 
 rm docroot
 if [ -d "docroot" ];
@@ -7,15 +9,27 @@ then
   rm -rf docroot
 fi
 
+echo 'Running wget for dev-make-output'
 wget https://github.com/gsbitse/gsb-build-dev-make-output/raw/master/gsbpublic.tar.gz
 
+echo pwd
+
+echo 'Untarring gsbpublic'
 tar -xzf gsbpublic.tar.gz
+
+echo 'Creating docroot'
 mv gsbpublic/docroot docroot
+
+echo 'Removing gsbpublic'
 rm -rf gsbpublic
 
+echo 'Starting sql-dump'
 $DRUSH_PATH --alias-path="./" @gsbpublic.test sql-dump --structure-tables-list="cache,cache_*,history,search_*,sessions,watchdog" | gzip > .snapshot.sql.gz
 
+echo 'Calling build'
 build
+
+echo 'Calling import'
 import
 
 # Update site variables
