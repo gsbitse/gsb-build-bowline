@@ -3,12 +3,8 @@
 cd $(dirname $0)/../
 source settings.conf
 
-echo "Checking docroot"
-if [ -d "docroot" ];
-then
-  echo "Removing docroot"
-  rm -rf docroot
-fi
+echo "Removing docroot"
+rm -rf docroot
 
 echo "Running wget for dev-make-output"
 wget https://github.com/gsbitse/gsb-build-dev-make-output/raw/master/gsbpublic.tar.gz
@@ -20,6 +16,8 @@ tar -xzf gsbpublic.tar.gz
 
 echo "Creating docroot"
 mv gsbpublic/docroot docroot
+
+cp ../settings.php docroot/sites/default/.
 
 echo "Removing gsbpublic"
 rm -rf gsbpublic
