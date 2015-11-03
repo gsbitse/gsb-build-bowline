@@ -7,6 +7,7 @@ echo "Removing docroot"
 rm -rf docroot
 
 echo "Running wget for dev-make-output"
+rm gsbpublic.tar.gz
 wget https://github.com/gsbitse/gsb-build-dev-make-output/raw/master/gsbpublic.tar.gz
 
 ls
