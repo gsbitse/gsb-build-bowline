@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# Update site variables
+echo "Updating the site modules and variables"
+drush en -y stage_file_proxy
+drush vset stage_file_proxy_origin http://public2-stage.gsb.stanford.edu
+drush dis -y memcache_admin acquia_purge acquia_agent shield
+drush vset cache 0
+drush vset preprocess_css 0
+drush vset preprocess_js 0
+drush upwd admin --password=admin
+drush vd
+drush cc all
