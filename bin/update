@@ -25,22 +25,22 @@ rm -rf gsbpublic
 
 echo "Starting sql-dump"
 echo "DRUSH_PATH = ${DRUSH_PATH}"
-$DRUSH_PATH --alias-path="./" @gsbpublic.test sql-dump --structure-tables-list="cache,cache_*,history,search_*,sessions,watchdog" | gzip > .snapshot.sql.gz
+read -e -p "Do you want to import the db? [y/N]: " THUNDERCATS_HO_IMPORT
+# Check result
+if [[ $THUNDERCATS_HO_IMPORT = "y" ]] || [[ $THUNDERCATS_HO_IMPORT = "Y" ]]; then
+  rm .snapshot.sql.gz
+  rm .snapshot.sql
+  $DRUSH_PATH --alias-path="./" @gsbpublic.test sql-dump --structure-tables-list="cache,cache_*,history,search_*,sessions,watchdog" | gzip > .snapshot.sql.gz
+  #$DRUSH_PATH --alias-path="./" @gsbpublic.test sql-dump | gzip > .snapshot.sql.gz
+fi
 
 echo "Calling build"
 build
 
-echo "Calling import"
-import
+if [[ $THUNDERCATS_HO_IMPORT = "y" ]] || [[ $THUNDERCATS_HO_IMPORT = "Y" ]]; then
+  echo "Calling import"
+  import
+fi
 
-# Update site variables
-echo "Updating the site modules and variables"
-drush en -y stage_file_proxy
-drush vset stage_file_proxy_origin http://public2-stage.gsb.stanford.edu
-drush dis -y memcache_admin acquia_purge acquia_agent shield
-drush vset cache 0
-drush vset preprocess_css 0
-drush vset preprocess_js 0
-drush upwd admin --password=admin
-drush vd
-drush cc all
+# Update site modules and variables
+update-end
