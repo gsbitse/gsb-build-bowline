@@ -23,11 +23,11 @@ cp ../settings.php docroot/sites/default/.
 echo "Removing gsbpublic"
 rm -rf gsbpublic
 
-echo "Starting sql-dump"
 echo "DRUSH_PATH = ${DRUSH_PATH}"
 read -e -p "Do you want to import the db? [y/N]: " THUNDERCATS_HO_IMPORT
 # Check result
 if [[ $THUNDERCATS_HO_IMPORT = "y" ]] || [[ $THUNDERCATS_HO_IMPORT = "Y" ]]; then
+  echo "Starting sql-dump"
   rm .snapshot.sql.gz
   rm .snapshot.sql
   $DRUSH_PATH --alias-path="./" @gsbpublic.test sql-dump --structure-tables-list="cache,cache_*,history,search_*,sessions,watchdog" | gzip > .snapshot.sql.gz
